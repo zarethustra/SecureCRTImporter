@@ -26,7 +26,8 @@ Module Module1
                         Dim newrow As DataRow = table.NewRow
                         newrow("Name") = currentRow(0)
                         newrow("IP Address") = currentRow(1)
-                        newrow("Type") = currentRow(2)
+                        newrow("Machine Type") = currentRow(2)
+                        newrow("Type") = Whattype(currentRow(2), currentRow(0))
                         table.Rows.Add(newrow)
                     End If
                     x += 1
@@ -44,10 +45,32 @@ Module Module1
         ' Create four typed columns in the DataTable.
         table.Columns.Add("Name", GetType(String))
         table.Columns.Add("IP Address", GetType(String))
+        table.Columns.Add("Machine Type", GetType(String))
         table.Columns.Add("Type", GetType(String))
 
         Return table
     End Function
+    Function Whattype(name As String, name2 As String) As String
+        Dim Device_Type As String = "Error"
+
+        If name.Contains("Catalyst") Or name.Contains("Catalyst") Then
+            Device_Type = "Switch"
+        ElseIf name.Contains("ISR") Or name.Contains("3925") Then
+            Device_Type = "Router"
+        ElseIf name.Contains("ASA") Then
+            Device_Type = "Firewall"
+        ElseIf name.Contains("Cisco") Then
+            If name2.Contains("ASR") Then
+                Device_Type = "Router"
+            End If
+            If name2.Contains("N9") Then
+                Device_Type = "Nexus 9K"
+            End If
+        End If
+
+        Return Device_Type
+    End Function
+
 End Module
 
 
